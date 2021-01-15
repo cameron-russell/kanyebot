@@ -1,0 +1,9 @@
+{
+  "name": "kanyebot",
+  "version": "1.0.0",
+  "description": "Discord bot to interface with kanye.rest",
+  "main": "index.js",
+  "repository": "https://github.com/cameron-russell/kanyebot.git",
+  "author": "Cameron Russell <32221303+cameron-russell@users.noreply.github.com>",
+  "license": "MIT"
+}
