@@ -199,3 +199,4 @@ $RECYCLE.BIN/
 .env
 Dockerfile
 build-docker-image.sh
+deploy-instance.sh
