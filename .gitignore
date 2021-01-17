@@ -200,3 +200,5 @@ $RECYCLE.BIN/
 Dockerfile
 build-docker-image.sh
 deploy-instance.sh
+update-container.sh
+update-bot.sh

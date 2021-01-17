@@ -7,12 +7,16 @@ require('dotenv').config();
 
 // create client
 const client: Client = new Discord.Client();
+
+// create collection of commands
 const commands: Collection<string, Command> = new Discord.Collection();
 
+// get files containing command definitions
 const commandFiles: string[] = fs
   .readdirSync(path.resolve(__dirname + '/commands'))
   .filter((file) => file.endsWith('.js') && !file.includes('model'));
 
+// assign each command to the collection
 for (const file of commandFiles) {
   const cmd: Command = require(`./commands/${file}`);
   commands.set(cmd.name, cmd);
@@ -26,22 +30,20 @@ client.on('ready', () => {
   console.log('I am ready!');
 });
 
-// // Create an event listener for messages
-// client.on('message', (message) => {
-//   // If the message is "ping"
-//   if (message.content === 'ping') {
-//     // Send "pong" to the same channel
-//     message.channel.send('pong');
-//   }
-// });
-
 client.on('message', (message: Message) => {
+  // if the message doesn't start with a . or the author is the bot, return
   if (!message.content.startsWith('.') || message.author.bot) return;
 
+  // extract command and check if it exists in the collection
   const args = message.content.slice(1).trim().split(/ +/);
-  const command = args.shift()?.toLowerCase() ?? 'error';
+  const command = args.shift()?.toLowerCase() ?? 'commandthatdoesntexist';
   const exists = commands.has(command);
-  commands.get(exists ? command : "error")?.fn(message, args);
+
+  // return if the command doesn't exist
+  if (!exists) return;
+
+  // execute the function
+  commands.get(command)?.fn(message, args);
 });
 
 // Log our bot in using the token from https://discord.com/developers/applications
