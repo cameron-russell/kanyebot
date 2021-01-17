@@ -11,7 +11,7 @@ const quoteEmbed = {
 
 module.exports = {
   name: 'quote',
-  description: 'get a quote',
+  description: 'Gets a random Kanye quote from the Kanye API.',
   fn: async (message: Message, args: string) => {
     try {
       const { data } = await axios.get('https://api.kanye.rest');
