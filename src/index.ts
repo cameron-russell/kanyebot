@@ -39,9 +39,9 @@ client.on('message', (message: Message) => {
   if (!message.content.startsWith('.') || message.author.bot) return;
 
   const args = message.content.slice(1).trim().split(/ +/);
-  const command = args.shift()?.toLowerCase();
-
-  commands.get(command ?? 'error')?.fn(message, args);
+  const command = args.shift()?.toLowerCase() ?? 'error';
+  const exists = commands.has(command);
+  commands.get(exists ? command : "error")?.fn(message, args);
 });
 
 // Log our bot in using the token from https://discord.com/developers/applications
