@@ -37,7 +37,9 @@ export const setSchedule = (
   args: string[],
 ) => {
   try {
+    console.log(inputTime);
     const time = getDuration(inputTime);
+
     if (time === previousTime) return message.channel.send("I'm already on this schedule!");
 
     if (schedule) {
@@ -50,7 +52,7 @@ export const setSchedule = (
     message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
     return true;
   } catch (error) {
-    commands.get('error')?.fn(message, args);
+    commands.get('error')?.fn(message, error.message);
     return false;
   }
 };

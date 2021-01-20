@@ -51,10 +51,10 @@ client.on('message', (message) => {
       return message.channel.send(
         'To set a new schedule, type "@kanyebot set <[0-9]>h or <[30-99]>m"',
       );
-
-    const success = setSchedule(args[1], previousTime, schedule, commands, message, args);
+    console.log('here');
+    const success = setSchedule(args[2], previousTime, schedule, commands, message, args);
     if (success) {
-      previousTime = getDuration(args[1]);
+      previousTime = getDuration(args[2]);
     }
 
     // try {
