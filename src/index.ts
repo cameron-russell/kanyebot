@@ -45,7 +45,6 @@ client.on('message', (message) => {
   ) {
     // if there is no set command and a value
     if (!args[1] && !args[2]) return;
-    console.log(args[1], args[2]);
 
     if (args[1] === 'set') {
       // attempt to set a schedule
