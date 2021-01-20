@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import Command from './Command-model';
+import { Command } from '../helpers';
 import fs from 'fs';
 import path from 'path';
 
@@ -28,7 +28,7 @@ const helpEmbed = {
 module.exports = {
   name: 'help',
   description: 'Displays this message box.',
-  fn: (message: Message, args: string) => {
+  fn: (message: Message, args: string[]) => {
     message.channel.send({ embed: helpEmbed });
   },
 };
