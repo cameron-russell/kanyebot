@@ -53,8 +53,7 @@ client.on('message', (message) => {
 
       // if we set a schedule successfully, update the previous schedule length
       if (success) previousTime = getDuration(args[2]);
-    }
-    if (args[1] === 'stop') {
+    } else if (args[1] === 'stop') {
       // if there is a schedule, clear it
       if (schedule) {
         schedule.cancel();
