@@ -47,30 +47,24 @@ client.on('message', (message) => {
     if (!args[1] && !args[2]) return;
     console.log(args[1], args[2]);
 
-    if (args[1] !== 'set')
-      return message.channel.send(
-        'To set a new schedule, type "@kanyebot set <[0-9]>h or <[30-99]>m"',
-      );
-    console.log('here');
-    const success = setSchedule(args[2], previousTime, schedule, commands, message, args);
-    if (success) {
-      previousTime = getDuration(args[2]);
+    if (args[1] === 'set') {
+      // attempt to set a schedule
+      const success = setSchedule(args[2], previousTime, schedule, commands, message, args);
+
+      // if we set a schedule successfully, update the previous schedule length
+      if (success) previousTime = getDuration(args[2]);
     }
-
-    // try {
-    //   const time = getDuration(args[1]);
-    //   if (time === previousTime) return message.channel.send("I'm already on this schedule!");
-
-    //   if (schedule) {
-    //     schedule.cancel();
-    //     schedule = Schedule.scheduleJob(`*/${time} * * * *`, () =>
-    //       commands.get('quote')?.fn(message, args),
-    //     );
-    //     return message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
-    //   }
-    // } catch (error) {
-    //   commands.get('error')?.fn(message, args);
-    // }
+    if (args[1] === 'stop') {
+      // if there is a schedule, clear it
+      if (schedule) {
+        schedule.cancel();
+        return message.channel.send('I will no longer send quotes to this channel.');
+      } else return message.channel.send('I am not currently on a schedule!');
+    } else {
+      return message.channel.send(
+        'Command not recognised. To set a new schedule, type "@kanyebot set <[0-9]>h or <[30-99]>m". To clear the schedule, type "@kanyebot stop"',
+      );
+    }
   }
 });
 

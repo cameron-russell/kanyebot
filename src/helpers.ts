@@ -37,7 +37,6 @@ export const setSchedule = (
   args: string[],
 ) => {
   try {
-    console.log(inputTime);
     const time = getDuration(inputTime);
 
     if (time === previousTime) return message.channel.send("I'm already on this schedule!");
