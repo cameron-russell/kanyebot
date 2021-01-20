@@ -2,7 +2,7 @@ import Discord, { Client, Collection, Message } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 import Schedule from 'node-schedule';
-import { setSchedule, Command } from './helpers';
+import { setSchedule, Command, getDuration } from './helpers';
 
 require('dotenv').config();
 
@@ -52,7 +52,10 @@ client.on('message', (message) => {
         'To set a new schedule, type "@kanyebot set <[0-9]>h or <[30-99]>m"',
       );
 
-    setSchedule(args[1], previousTime, schedule, commands, message, args);
+    const success = setSchedule(args[1], previousTime, schedule, commands, message, args);
+    if (success) {
+      previousTime = getDuration(args[1]);
+    }
 
     // try {
     //   const time = getDuration(args[1]);

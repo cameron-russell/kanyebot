@@ -42,13 +42,15 @@ export const setSchedule = (
 
     if (schedule) {
       schedule.cancel();
-      schedule = Schedule.scheduleJob(`*/${time} * * * *`, () =>
-        commands.get('quote')?.fn(message, args),
-      );
-      previousTime = time;
-      return message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
     }
+    schedule = Schedule.scheduleJob(`*/${time} * * * *`, () =>
+      commands.get('quote')?.fn(message, args),
+    );
+
+    message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
+    return true;
   } catch (error) {
     commands.get('error')?.fn(message, args);
+    return false;
   }
 };
