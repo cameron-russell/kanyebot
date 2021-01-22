@@ -32,18 +32,18 @@ export const setSchedule = (
   schedule: SingletonSchedule,
   message: Message,
   args: string[],
-) => {
+): boolean => {
   try {
     const time = getDuration(inputTime);
 
-    if (time === schedule.getPreviousTime())
-      return message.channel.send("I'm already on this schedule!");
+    if (time === schedule.getPreviousTime()) {
+      message.channel.send("I'm already on this schedule!");
+      return false;
+    }
 
-    schedule.scheduleJob(`*/${time} * * * *`, () =>
-      schedule.getCommands().get('quote')?.fn(message, args),
-    );
-
+    schedule.scheduleJob(`*/${time} * * * *`, () => schedule.getCommands().get('quote')?.fn(message, args));
     message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
+    schedule.setPreviousTime(time);
     return true;
   } catch (error) {
     schedule.getCommands().get('error')?.fn(message, error.message);

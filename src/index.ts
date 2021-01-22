@@ -29,16 +29,18 @@ client.on('message', (message) => {
 
     if (args[1] === 'set') {
       // attempt to set a schedule
-      const success = setSchedule(args[2], schedule, message, args);
+      return setSchedule(args[2], schedule, message, args);
+    }
 
-      // if we set a schedule successfully, update the previous schedule length
-      if (success) schedule.setPreviousTime(getDuration(args[2]));
-    } else if (args[1] === 'stop') {
-      // if there is a schedule, clear it
-      schedule.cancelAll();
-      return message.channel.send('I will no longer send quotes to this channel.');
-    } else return message.channel.send('I am not currently on a schedule!');
-  } else {
+    if (args[1] === 'stop') {
+      if (schedule.hasJobs()) {
+        // if there is a schedule, clear it
+        schedule.cancelAll();
+        return message.channel.send('I will no longer send quotes to this channel.');
+      }
+      return message.channel.send('I am not currently on a schedule!');
+    }
+
     return message.channel.send(
       'Command not recognised. To set a new schedule, type "@kanyebot set <[0-9]>h or <[30-99]>m". To clear the schedule, type "@kanyebot stop"',
     );

@@ -38,13 +38,17 @@ export default class SingletonSchedule {
     return this.commands;
   };
 
-  scheduleJob = (s: string, fn: Schedule.JobCallback) => {
-    this.cancelAll();
+  hasJobs = (): boolean => {
+    return Object.keys(Schedule.scheduledJobs).length > 0;
+  };
 
+  scheduleJob = (s: string, fn: Schedule.JobCallback): void => {
+    this.cancelAll();
+    console.log('setting a new job');
     //schedule a new job;
     Schedule.scheduleJob(s, fn);
   };
-  cancelAll = () => {
+  cancelAll = (): void => {
     Object.keys(Schedule.scheduledJobs).forEach((job) => Schedule.cancelJob(job));
   };
 }
