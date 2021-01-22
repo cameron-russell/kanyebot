@@ -1,6 +1,5 @@
 import { Message } from 'discord.js';
-import Schedule from 'node-schedule';
-import { Collection } from 'discord.js';
+import SingletonSchedule from './Singleton';
 
 export interface Command {
   name: string;
@@ -19,7 +18,7 @@ export const getDuration = (arg: string): string => {
 
     case 'm': {
       const time = arg.match(/^([3-9]{1})(\d{1})(?=m$)/)?.[0];
-      if (!time) throw new Error('Time must be more than 30 minutes!');
+      if (!time) throw new Error('Time must be between 30 and 99 minutes!');
       return time;
     }
 
@@ -30,28 +29,24 @@ export const getDuration = (arg: string): string => {
 
 export const setSchedule = (
   inputTime: string,
-  previousTime: string,
-  schedule: Schedule.Job,
-  commands: Collection<string, Command>,
+  schedule: SingletonSchedule,
   message: Message,
   args: string[],
 ) => {
   try {
     const time = getDuration(inputTime);
 
-    if (time === previousTime) return message.channel.send("I'm already on this schedule!");
+    if (time === schedule.getPreviousTime())
+      return message.channel.send("I'm already on this schedule!");
 
-    if (schedule) {
-      schedule.cancel();
-    }
-    schedule = Schedule.scheduleJob(`*/${time} * * * *`, () =>
-      commands.get('quote')?.fn(message, args),
+    schedule.scheduleJob(`*/${time} * * * *`, () =>
+      schedule.getCommands().get('quote')?.fn(message, args),
     );
 
     message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
     return true;
   } catch (error) {
-    commands.get('error')?.fn(message, error.message);
+    schedule.getCommands().get('error')?.fn(message, error.message);
     return false;
   }
 };
