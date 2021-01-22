@@ -17,7 +17,7 @@ module.exports = {
       const { data } = await axios.get('https://api.kanye.rest');
       if (data?.quote) {
         const embed = quoteEmbed;
-        embed.description = data.quote;
+        embed.description = `"${data.quote}"`;
         message.channel.send({ embed });
       } else throw new Error();
     } catch {
