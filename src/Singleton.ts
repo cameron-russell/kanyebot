@@ -44,7 +44,6 @@ export default class SingletonSchedule {
 
   scheduleJob = (s: string, fn: Schedule.JobCallback): void => {
     this.cancelAll();
-    console.log('setting a new job');
     //schedule a new job;
     Schedule.scheduleJob(s, fn);
   };
