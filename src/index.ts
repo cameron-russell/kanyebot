@@ -27,7 +27,12 @@ client.on('message', (message) => {
 
     if (args[1] === 'set') {
       // attempt to set a schedule
-      return setSchedule(args[2], schedule, message, args);
+      try {
+        const time = setSchedule(args[2], schedule, message, args);
+        return message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
+      } catch (error) {
+        return message.channel.send(error.message);
+      }
     }
 
     if (args[1] === 'stop') {

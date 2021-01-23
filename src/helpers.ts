@@ -32,21 +32,20 @@ export const setSchedule = (
   schedule: SingletonSchedule,
   message: Message,
   args: string[],
-): boolean => {
+): string => {
   try {
+    // get the duration
     const time = getDuration(inputTime);
 
-    if (time === schedule.getPreviousTime()) {
-      message.channel.send("I'm already on this schedule!");
-      return false;
-    }
+    // if this is the same as the previous duration, go to the catch block
+    if (time === schedule.getPreviousTime()) throw new Error("I'm already on this schedule!");
 
+    // schedule the job and update the previous time
     schedule.scheduleJob(`*/${time} * * * *`, () => schedule.getCommands().get('quote')?.fn(message, args));
-    message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
     schedule.setPreviousTime(time);
-    return true;
+    return time;
   } catch (error) {
-    schedule.getCommands().get('error')?.fn(message, error.message);
-    return false;
+    // propogate the error message
+    throw new Error(error.message);
   }
 };
