@@ -1,13 +1,10 @@
 import Discord, { Client, Message } from 'discord.js';
-import { setSchedule } from './helpers';
-import SingletonSchedule from './Singleton';
+import SingletonFactory from './Singleton';
 
 require('dotenv').config();
 
 // create client
 const client: Client = new Discord.Client();
-const schedule = new SingletonSchedule();
-
 /**
  * The ready event is vital, it means that only _after_ this will your bot start reacting to information
  * received from Discord
@@ -16,54 +13,22 @@ client.on('ready', () => {
   console.log('I am ready!');
 });
 
-// // Create an event listener for messages
-client.on('message', (message) => {
-  const args = message.content.slice(1).trim().split(/ +/);
-
-  //if a bot @'s kanye
-  if (message.mentions.users.find((user) => user.username === 'kanyebot' && user.bot && !message.author.bot)) {
-    // if there is no set command and a value
-    if (!args[1] && !args[2]) return;
-
-    if (args[1] === 'set') {
-      // attempt to set a schedule
-      try {
-        const time = setSchedule(args[2], schedule, message, args);
-        return message.channel.send(`I will send a quote to this channel every ${time} minutes.`);
-      } catch (error) {
-        return message.channel.send(error.message);
-      }
-    }
-
-    if (args[1] === 'stop') {
-      if (schedule.hasJobs()) {
-        // if there is a schedule, clear it
-        schedule.cancelAll();
-        return message.channel.send('I will no longer send quotes to this channel.');
-      }
-      return message.channel.send('I am not currently on a schedule!');
-    }
-
-    return message.channel.send(
-      'Command not recognised. To set a new schedule, type "@kanyebot set <[0-9]>h or <[30-99]>m". To clear the schedule, type "@kanyebot stop"',
-    );
-  }
-});
-
+// Create an event listener for messages
 client.on('message', (message: Message) => {
-  // if the message doesn't start with a . or the author is the bot, return
-  if (!message.content.startsWith('.') || message.author.bot) return;
+  // if anyone @'s kanyebot
+  if (message.mentions.users.find((user) => user.username === 'kanyebot' && user.bot && !message.author.bot)) {
+    // extract command and check if it exists in the collection
+    const args = message.content.slice(1).trim().split(/ +/);
+    const command = args.shift()?.toLowerCase() ?? 'commandthatdoesntexist';
+    const schedule = SingletonFactory.getInstance();
+    const exists = schedule.getCommands().has(command);
 
-  // extract command and check if it exists in the collection
-  const args = message.content.slice(1).trim().split(/ +/);
-  const command = args.shift()?.toLowerCase() ?? 'commandthatdoesntexist';
-  const exists = schedule.getCommands().has(command);
+    // return if the command doesn't exist
+    if (!exists) return;
 
-  // return if the command doesn't exist
-  if (!exists) return;
-
-  // execute the function
-  schedule.getCommands().get(command)?.fn(message, args);
+    // execute the function
+    schedule.getCommands().get(command)?.fn(message, args);
+  }
 });
 
 // Log our bot in using the token from https://discord.com/developers/applications

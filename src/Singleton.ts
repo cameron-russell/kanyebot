@@ -17,7 +17,7 @@ for (const file of commandFiles) {
   commands.set(cmd.name, cmd);
 }
 
-export default class SingletonSchedule {
+class CustomSchedule {
   constructor() {
     this.previousTime = '';
     this.commands = commands;
@@ -51,3 +51,17 @@ export default class SingletonSchedule {
     Object.keys(Schedule.scheduledJobs).forEach((job) => Schedule.cancelJob(job));
   };
 }
+
+const SingletonFactory = (function () {
+  let instance: CustomSchedule;
+  return {
+    getInstance: () => {
+      if (!instance) {
+        instance = new CustomSchedule();
+      }
+      return instance;
+    },
+  };
+})();
+
+export default SingletonFactory;

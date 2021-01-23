@@ -7,6 +7,16 @@ export interface Command {
   fn: Function;
 }
 
+export const blueEmbed = {
+  color: 0x0099ff,
+  description: '',
+};
+
+export const errorEmbed = {
+  color: 0xce4760,
+  description: '',
+};
+
 export const getDuration = (arg: string): string => {
   switch (arg[arg.length - 1]) {
     case 'h': {
@@ -24,28 +34,5 @@ export const getDuration = (arg: string): string => {
 
     default:
       throw new Error('Time needs to be in the format "1h" or "30m" etc.');
-  }
-};
-
-export const setSchedule = (
-  inputTime: string,
-  schedule: SingletonSchedule,
-  message: Message,
-  args: string[],
-): string => {
-  try {
-    // get the duration
-    const time = getDuration(inputTime);
-
-    // if this is the same as the previous duration, go to the catch block
-    if (time === schedule.getPreviousTime()) throw new Error("I'm already on this schedule!");
-
-    // schedule the job and update the previous time
-    schedule.scheduleJob(`*/${time} * * * *`, () => schedule.getCommands().get('quote')?.fn(message, args));
-    schedule.setPreviousTime(time);
-    return time;
-  } catch (error) {
-    // propogate the error message
-    throw new Error(error.message);
   }
 };
