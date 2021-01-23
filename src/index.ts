@@ -1,7 +1,5 @@
 import Discord, { Client, Message } from 'discord.js';
-import fs from 'fs';
-import path from 'path';
-import { setSchedule, Command, getDuration } from './helpers';
+import { setSchedule } from './helpers';
 import SingletonSchedule from './Singleton';
 
 require('dotenv').config();

@@ -13,13 +13,13 @@ export const getDuration = (arg: string): string => {
       const time = arg.match(/^(\d{1})(\.\d{1,2})?(?=h$)/)?.[0];
       if (!time) throw new Error('Time must be less than 10 hours!');
 
-      return (Number(time) * 60).toString();
+      return Math.round(Number(time) * 60).toString();
     }
 
     case 'm': {
       const time = arg.match(/^([3-9]{1})(\d{1})(?=m$)/)?.[0];
       if (!time) throw new Error('Time must be between 30 and 99 minutes!');
-      return time;
+      return Math.round(Number(time)).toString();
     }
 
     default:
