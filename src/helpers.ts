@@ -1,6 +1,3 @@
-import { Message } from 'discord.js';
-import SingletonSchedule from './Singleton';
-
 export interface Command {
   name: string;
   description: string;

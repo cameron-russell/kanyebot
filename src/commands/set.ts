@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { getDuration } from 'src/helpers';
+import { getDuration } from '../helpers';
 import SingletonFactory from '../Singleton';
 
 const setEmbed = {

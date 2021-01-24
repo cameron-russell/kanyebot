@@ -19,15 +19,14 @@ client.on('message', (message: Message) => {
   if (message.mentions.users.find((user) => user.username === 'kanyebot' && user.bot && !message.author.bot)) {
     // extract command and check if it exists in the collection
     const args = message.content.slice(1).trim().split(/ +/);
-    const command = args.shift()?.toLowerCase() ?? 'commandthatdoesntexist';
+    const command = args?.[1] ?? 'commandthatdoesntexist';
     const schedule = SingletonFactory.getInstance();
     const exists = schedule.getCommands().has(command);
-
     // return if the command doesn't exist
     if (!exists) return;
 
     // execute the function
-    schedule.getCommands().get(command)?.fn(message, args);
+    return schedule.getCommands().get(command)?.fn(message, args);
   }
 });
 
