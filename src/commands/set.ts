@@ -1,11 +1,6 @@
 import { Message } from 'discord.js';
-import { getDuration } from '../helpers';
+import { getDuration, blueEmbed } from '../helpers';
 import SingletonFactory from '../Singleton';
-
-const setEmbed = {
-  color: 0x0099ff,
-  description: '',
-};
 
 module.exports = {
   name: 'set',
@@ -34,8 +29,8 @@ module.exports = {
       schedule.setPreviousTime(time);
 
       // send notifiction to the channel
-      setEmbed.description = `I will send a quote to this channel every ${time} minutes.`;
-      return message.channel.send({ embed: setEmbed });
+      blueEmbed.description = `I will send a quote to this channel every ${time} minutes.`;
+      return message.channel.send({ embed: blueEmbed });
     } catch (error) {
       // throw an error
       schedule.getCommands().get('error')?.fn(message, error.message);
